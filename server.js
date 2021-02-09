@@ -87,7 +87,7 @@ const runSearch = () => {
 //List all Employees
 const viewAll = () => {
     const query =
-        'select * from employee'
+        'select id, first_name, last_name from employee'
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.log("--------------------------------------")
