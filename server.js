@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const cTable = require("console.table")
+const cTable = require('console.table')
 const boxen = require ('boxen')
 
 const connection = mysql.createConnection({
@@ -50,8 +50,8 @@ const runSearch = () => {
                     break;
 
                 case 'View Roles':
-                    viewRoles()
-
+                    viewRoles();
+                    break;
 
                 case 'View Department':
                     viewDepts();
@@ -78,7 +78,7 @@ const runSearch = () => {
                     break;
 
                 case 'Update Employee Role':
-                    updateEmployee();
+                    updateRole();
                     break;
 
                 case 'Update Employee Manager':
@@ -342,20 +342,6 @@ const addEmployee = () => {
 
 //   * View employees by manager
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //   * Delete departments, roles, and employees
 
 //   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
@@ -363,76 +349,76 @@ const addEmployee = () => {
 //REMOVE EMPLOYEE
 const removeEmployee = () => {
     inquirer.prompt([
-        {
-            name: "first_name",
-            input: "input",
-            message: "What is the first name of the employee you want to REMOVE:",
-            validate(entryInput) {
-                if (entryInput) {
-                    return true
-                }
-                else {
-                    return "PUT THE FIRST NAME"
-                }
-            }
-        },
-        {
-            name: "last_name",
-            input: "input",
-            message: "What is the last name of the employee you want to REMOVE:",
-            validate(entryInput) {
-                if (entryInput) {
-                    return true
-                }
-                else {
-                    return "PUT THE LAST NAME"
-                }
-            }
-        },
+        // {
+        //     name: "first_name",
+        //     input: "input",
+        //     message: "What is the first name of the employee you want to REMOVE:",
+        //     validate(entryInput) {
+        //         if (entryInput) {
+        //             return true
+        //         }
+        //         else {
+        //             return "PUT THE FIRST NAME"
+        //         }
+        //     }
+        // },
+        // {
+        //     name: "last_name",
+        //     input: "input",
+        //     message: "What is the last name of the employee you want to REMOVE:",
+        //     validate(entryInput) {
+        //         if (entryInput) {
+        //             return true
+        //         }
+        //         else {
+        //             return "PUT THE LAST NAME"
+        //         }
+        //     }
+        // },
 
 
         {
-            name: "role_id",
+            name: "emp_id",
             input: "input",
-            message: "Role ID:",
-            validate: (entryInput) => {
-                if (/^([1-9])$/.test(entryInput)) {
-                    return true
-                }
-                else {
-                    return "Please put a number between 1-9 only!"
-                }
-            }
+            message: "Employee ID:",
+            // validate: (entryInput) => {
+            //     if (/^([1-9])$/.test(entryInput)) {
+            //         return true
+            //     }
+            //     else {
+            //         return "Please put a number between 1-9 only!"
+            //     }
+            // }
         },
-        {
-            name: "manager_id",
-            input: "input",
-            message: "Manager ID:",
-            validate: (entryInput) => {
-                if (/^([1-9])$/.test(entryInput)) {
-                    return true
-                }
-                else {
-                    return "Please put a number between 1-9 only!"
-                }
-            }
-        },
-        {
-            name: "confirmDELETE",
-            input: "confirm",
-            message: `Are you sure you want to delete ?`, //////////////////////
-        },
+        // {
+        //     name: "manager_id",
+        //     input: "input",
+        //     message: "Manager ID:",
+        //     validate: (entryInput) => {
+        //         if (/^([1-9])$/.test(entryInput)) {
+        //             return true
+        //         }
+        //         else {
+        //             return "Please put a number between 1-9 only!"
+        //         }
+        //     }
+        // },
+        // {
+        //     name: "confirmDELETE",
+        //     input: "confirm",
+        //     message: `Are you sure you want to delete ?`, //////////////////////
+        // },
 
 
     ])
         .then((answer) => {
             connection.query(
-                'DELETE FROM employee WHERE id = ?',
+                'DELETE FROM employee WHERE ?',
                 {
-                    first_name: answer.first_name,
-                    last_name: answer.last_name,
-                    role_id: answer.role_id,
-                    manager_id: answer.manager_id
+                    // first_name: answer.first_name,
+                    // last_name: answer.last_name,
+                    id: answer.emp_id,
+                    // manager_id: answer.manager_id
                 },
                 (err) => {
                     if (err) throw err;
@@ -447,9 +433,57 @@ const removeEmployee = () => {
     // )
 }
 
-// const updateEmployee = () =>{
+const updateRole = () =>{
+    // connection.query('select * from role',
+    inquirer.prompt ([
+        {
+            name: "updateID",
+            input:"input",
+            message: "What is the Employee ID you want to update?",
 
-// }
+        },
+        {
+            name: "newRole",
+            input: "input",
+            message : "What is the NEW role ID?"
+        },
+    ])
+    // )
+    .then((answer) => {
+        connection.query (
+            'UPDATE employee SET ? WHERE ?',
+           [
+            {
+                role_id: answer.newRole,
+            },
+            {
+                id: answer.updateID
+            },
+        ],
+            (err) => {
+                if (err) throw err;
+                console.log(`Your Role has been updated to ${answer.newRole}`)
+                runSearch()
+            }
+            )
+
+    })
+
+
+    // const query = 'UPDATE employee SET ? WHERE ?',
+
+}
 
 
 
+
+
+// * The command-line application should allow users to:
+
+//   * Update employee managers
+
+//   * View employees by manager
+
+//   * Delete departments, roles, and employees
+
+//   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
