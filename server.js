@@ -25,18 +25,21 @@ const runSearch = () => {
     inquirer
         .prompt({
             name: 'action',
-            type: 'list',
+            type: 'rawlist',
             message: 'What would you like to do?',
             choices: [
                 'View All Employees',
                 'View Roles',
                 'View Department',
                 'View Managers',
+                'Add Department',
+                'Add Role',
                 'Add Employee',
                 'Remove Employee',
                 'Update Employee Role',
                 'Update Employee Manager',
-                'Exit',
+                '-----Exit-----',
+
             ],
         })
         .then((answer) => {
@@ -57,6 +60,14 @@ const runSearch = () => {
                     viewManager();
                     break;
 
+                case 'Add Department':
+                    addDept();
+                    break;
+
+                case 'Add Role':
+                    addRole();
+                    break;
+
                 case 'Add Employee':
                     addEmployee();
                     break;
@@ -73,7 +84,7 @@ const runSearch = () => {
                     updateManager();
                     break;
 
-                case 'Exit':
+                case '-----Exit-----':
                     connection.end();
                     break;
 
@@ -130,6 +141,113 @@ const viewManager = () => {
     });
     runSearch();
 };
+
+//ADD DEPT
+const addDept = () =>  {
+    inquirer.prompt([
+
+        {
+            name: "dept_name",
+            input: "input",
+            message: "Department Name:",
+            validate(entryInput) {
+                if (entryInput) {
+                    return true
+                }
+                else {
+                    return "PUT THE NAME OF DEPARTMENT"
+                }
+            }
+        },
+        {
+            name: "confirmDept",
+            input: "confirm",
+            message: "Please confir, if you want to create Department:-----:",//<----------- how to fix this. 
+            
+        },
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO department SET ?',
+                {
+                    name: answer.dept_name,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("New Department has been added!"),
+                        runSearch()
+                }
+            )
+        })
+}
+
+const addRole = () =>  {
+    inquirer.prompt([
+
+        {
+            name: "title",
+            input: "input",
+            message: "Role Title:",
+            validate(entryInput) {
+                if (entryInput) {
+                    return true
+                }
+                else {
+                    return "PUT THE ROLE'S TITLE"
+                }
+            }
+        },
+        {
+            name: "salary",
+            input: "input",
+            message: "Role Salary:",
+            validate(entryInput) {
+                if (entryInput) {
+                    return true
+                }
+                else {
+                    return "PUT THE SALARY"
+                }
+            }
+        },
+        {
+            name: "dept_id",
+            input: "input",
+            message: "Department ID:",
+            validate(entryInput) {
+                if (entryInput) {
+                    return true
+                }
+                else {
+                    return "PUT THE DEPARTMENT ID"
+                }
+            }
+        },
+        {
+            name: "confirmRole",
+            input: "confirm",
+            message: "Please confir, if you want to create ROLE:-----:",//<----------- how to fix this. 
+            
+        },
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO role SET ?',
+                {
+                    title: answer.title,
+                    salary: answer.salary,
+                    department_id: answer.dept_id,
+
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("New Role has been added!"),
+                        runSearch()
+                }
+            )
+        })
+}
+
 
 //ADD EMPLOYEE
 const addEmployee = () => {
@@ -235,27 +353,42 @@ const removeEmployee = () => {
                 }
             }
         },
+
+
+        {
+            name: "id",
+            input: "input",
+            message: "Role ID:",
+            validate: (entryInput) => {
+                if (/^([1-9])$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-9 only!"
+                }
+            }
+        },
         // {
         //     name: "confirmDELETE",
         //     input: "confirm",
-        //     message: `Are you sure you want to delete ${employee.first_name}?`,
+        //     message: `Are you sure you want to delete ?`,
         // },
-        
+
 
     ])
-    // .then((answer) => {
-    //     connection.query(
-    //         'DELETE FROM employee where first_name = ?',
-    //         {
-    //             first_name: answer.first_name,
-    //         },
-    //         (err) => {
-    //             if (err) throw err;
-    //             console.log("Employee has been REMOVED!"),
-    //             runSearch()
-    //         }
-    //     )
-    // })
+        .then((answer) => {
+            connection.query(
+                'DELETE FROM employee WHERE id = ?',
+                {
+                    role_id: answer.id,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Employee has been REMOVED!"),
+                        runSearch()
+                }
+            )
+        })
 
     // connection.query(
     //     'DELETE FROM employee WHERE first_name, last_name',
