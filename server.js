@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require("console.table")
+const boxen = require ('boxen')
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -181,7 +182,7 @@ const addDept = () =>  {
         })
 }
 
-const addRole = () =>  {
+const addRole = (data) =>  {
     inquirer.prompt([
 
         {
@@ -202,8 +203,10 @@ const addRole = () =>  {
             input: "input",
             message: "Role Salary:",
             validate(entryInput) {
-                if (entryInput) {
-                    return true
+                if (!isNaN(entryInput)) {
+                    if (!(entryInput === "")){
+                        return true
+                    }
                 }
                 else {
                     return "PUT THE SALARY"
@@ -215,7 +218,7 @@ const addRole = () =>  {
             input: "input",
             message: "Department ID:",
             validate(entryInput) {
-                if (entryInput) {
+                if (/^([1-9])$/.test(entryInput)) {
                     return true
                 }
                 else {
@@ -223,12 +226,18 @@ const addRole = () =>  {
                 }
             }
         },
-        {
-            name: "confirmRole",
-            input: "confirm",
-            message: "Please confir, if you want to create ROLE:-----:",//<----------- how to fix this. 
+        // {
+        //     name: "confirmRole",
+        //     input: "confirm",
+        //     message: `Please confir, if you want to create ROLE ${data.title}`,//<----------- how to fix this. 
+        //     validate (entryInput) {
+        //         if (entryInput === false){
+        //             return "Please choose Y or N"
+        //         }
+        //     ////////////////////////////////
+        //     }
             
-        },
+        // },
         ])
         .then((answer) => {
             connection.query(
@@ -241,7 +250,7 @@ const addRole = () =>  {
                 },
                 (err) => {
                     if (err) throw err;
-                    console.log("New Role has been added!"),
+                    console.log(`New Role,${answer.title} has been added!`),
                         runSearch()
                 }
             )
@@ -324,6 +333,33 @@ const addEmployee = () => {
 
 }
 
+
+
+
+// * The command-line application should allow users to:
+
+//   * Update employee managers
+
+//   * View employees by manager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   * Delete departments, roles, and employees
+
+//   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+
 //REMOVE EMPLOYEE
 const removeEmployee = () => {
     inquirer.prompt([
@@ -356,7 +392,7 @@ const removeEmployee = () => {
 
 
         {
-            name: "id",
+            name: "role_id",
             input: "input",
             message: "Role ID:",
             validate: (entryInput) => {
@@ -368,11 +404,24 @@ const removeEmployee = () => {
                 }
             }
         },
-        // {
-        //     name: "confirmDELETE",
-        //     input: "confirm",
-        //     message: `Are you sure you want to delete ?`,
-        // },
+        {
+            name: "manager_id",
+            input: "input",
+            message: "Manager ID:",
+            validate: (entryInput) => {
+                if (/^([1-9])$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-9 only!"
+                }
+            }
+        },
+        {
+            name: "confirmDELETE",
+            input: "confirm",
+            message: `Are you sure you want to delete ?`, //////////////////////
+        },
 
 
     ])
@@ -380,7 +429,10 @@ const removeEmployee = () => {
             connection.query(
                 'DELETE FROM employee WHERE id = ?',
                 {
-                    role_id: answer.id,
+                    first_name: answer.first_name,
+                    last_name: answer.last_name,
+                    role_id: answer.role_id,
+                    manager_id: answer.manager_id
                 },
                 (err) => {
                     if (err) throw err;
