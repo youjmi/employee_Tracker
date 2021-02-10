@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table')
-const boxen = require ('boxen')
+// const boxen = require ('boxen')
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -36,6 +36,8 @@ const runSearch = () => {
                 'Add Department',
                 'Add Role',
                 'Add Employee',
+                'Remove Role',
+                'Remove Department',
                 'Remove Employee',
                 'Update Employee Role',
                 'Update Employee Manager',
@@ -46,35 +48,43 @@ const runSearch = () => {
         .then((answer) => {
             switch (answer.action) {
                 case 'View All Employees':
-                    viewAll();
+                    viewAll(); //done
                     break;
 
                 case 'View Roles':
-                    viewRoles();
+                    viewRoles(); //done
                     break;
 
                 case 'View Department':
-                    viewDepts();
+                    viewDepts(); //done
                     break;
 
                 case 'View Managers':
-                    viewManager();
+                    viewManager(); //done
                     break;
 
                 case 'Add Department':
-                    addDept();
+                    addDept(); //done
                     break;
 
                 case 'Add Role':
-                    addRole();
+                    addRole(); //done
                     break;
 
                 case 'Add Employee':
-                    addEmployee();
+                    addEmployee(); //done
+                    break;
+
+                case 'Remove Role':
+                    removeRole(); //done
+                    break;
+
+                case 'Remove Department':
+                    removeDept(); //done
                     break;
 
                 case 'Remove Employee':
-                    removeEmployee();
+                    removeEmployee(); //done
                     break;
 
                 case 'Update Employee Role':
@@ -82,7 +92,7 @@ const runSearch = () => {
                     break;
 
                 case 'Update Employee Manager':
-                    updateManager();
+                    updateManager(); //done
                     break;
 
                 case '-----Exit-----':
@@ -144,7 +154,7 @@ const viewManager = () => {
 };
 
 //ADD DEPT
-const addDept = () =>  {
+const addDept = () => {
     inquirer.prompt([
 
         {
@@ -160,13 +170,7 @@ const addDept = () =>  {
                 }
             }
         },
-        {
-            name: "confirmDept",
-            input: "confirm",
-            message: "Please confir, if you want to create Department:-----:",//<----------- how to fix this. 
-            
-        },
-        ])
+    ])
         .then((answer) => {
             connection.query(
                 'INSERT INTO department SET ?',
@@ -182,7 +186,7 @@ const addDept = () =>  {
         })
 }
 
-const addRole = (data) =>  {
+const addRole = () => {
     inquirer.prompt([
 
         {
@@ -204,7 +208,7 @@ const addRole = (data) =>  {
             message: "Role Salary:",
             validate(entryInput) {
                 if (!isNaN(entryInput)) {
-                    if (!(entryInput === "")){
+                    if (!(entryInput === "")) {
                         return true
                     }
                 }
@@ -226,19 +230,7 @@ const addRole = (data) =>  {
                 }
             }
         },
-        // {
-        //     name: "confirmRole",
-        //     input: "confirm",
-        //     message: `Please confir, if you want to create ROLE ${data.title}`,//<----------- how to fix this. 
-        //     validate (entryInput) {
-        //         if (entryInput === false){
-        //             return "Please choose Y or N"
-        //         }
-        //     ////////////////////////////////
-        //     }
-            
-        // },
-        ])
+    ])
         .then((answer) => {
             connection.query(
                 'INSERT INTO role SET ?',
@@ -346,132 +338,213 @@ const addEmployee = () => {
 
 //   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
-//REMOVE EMPLOYEE
-const removeEmployee = () => {
-    inquirer.prompt([
-        // {
-        //     name: "first_name",
-        //     input: "input",
-        //     message: "What is the first name of the employee you want to REMOVE:",
-        //     validate(entryInput) {
-        //         if (entryInput) {
-        //             return true
-        //         }
-        //         else {
-        //             return "PUT THE FIRST NAME"
-        //         }
-        //     }
-        // },
-        // {
-        //     name: "last_name",
-        //     input: "input",
-        //     message: "What is the last name of the employee you want to REMOVE:",
-        //     validate(entryInput) {
-        //         if (entryInput) {
-        //             return true
-        //         }
-        //         else {
-        //             return "PUT THE LAST NAME"
-        //         }
-        //     }
-        // },
 
+//REMOVE ROLE//
+const removeRole = () =>{
+    connection.query ('select * from role',(err,res)=> {
+        console.log(res)
+        if (err) throw err
+        inquirer.prompt ([
+            {
+                name: "role_id",
+                input: "input",
+                message: "Role ID: ",
+                validate: (entryInput) => {
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                        return true
+                    }
+                    else {
+                        return "Please put a number between 1-100!"
+                    }
+                }
+            },
 
-        {
-            name: "emp_id",
-            input: "input",
-            message: "Employee ID:",
-            // validate: (entryInput) => {
-            //     if (/^([1-9])$/.test(entryInput)) {
-            //         return true
-            //     }
-            //     else {
-            //         return "Please put a number between 1-9 only!"
-            //     }
-            // }
-        },
-        // {
-        //     name: "manager_id",
-        //     input: "input",
-        //     message: "Manager ID:",
-        //     validate: (entryInput) => {
-        //         if (/^([1-9])$/.test(entryInput)) {
-        //             return true
-        //         }
-        //         else {
-        //             return "Please put a number between 1-9 only!"
-        //         }
-        //     }
-        // },
-        // {
-        //     name: "confirmDELETE",
-        //     input: "confirm",
-        //     message: `Are you sure you want to delete ?`, //////////////////////
-        // },
-
-
-    ])
+        ])
         .then((answer) => {
             connection.query(
-                'DELETE FROM employee WHERE ?',
+                'DELETE FROM role WHERE ?',
                 {
                     // first_name: answer.first_name,
                     // last_name: answer.last_name,
-                    id: answer.emp_id,
+                    id: answer.role_id,
                     // manager_id: answer.manager_id
                 },
                 (err) => {
                     if (err) throw err;
-                    console.log("Employee has been REMOVED!"),
+                    console.log("Role has been REMOVED!"),
                         runSearch()
                 }
             )
         })
+    })
+}
+
+//REMOVE DEPARTMENT//
+const removeDept = () =>{
+    connection.query ('select * from department',(err,res)=> {
+        console.log(res)
+        if (err) throw err
+        inquirer.prompt ([
+            {
+                name: "dept_id",
+                input: "input",
+                message: "Department ID: ",
+                validate: (entryInput) => {
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                        return true
+                    }
+                    else {
+                        return "Please put a number between 1-100!"
+                    }
+                }
+            },
+
+        ])
+        .then((answer) => {
+            connection.query(
+                'DELETE FROM department WHERE ?',
+                {
+                    // first_name: answer.first_name,
+                    // last_name: answer.last_name,
+                    id: answer.dept_id,
+                    // manager_id: answer.manager_id
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Department has been REMOVED!"),
+                        runSearch()
+                }
+            )
+        })
+    })
+}
+
+
+//REMOVE EMPLOYEE
+const removeEmployee = () => {
+    connection.query('select * from employee', (err, res) => {
+        console.log(res)
+        if (err) throw err
+        inquirer.prompt([
+            {
+                name: "emp_id",
+                input: "input",
+                message: "Employee ID: ",
+                validate: (entryInput) => {
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                        return true
+                    }
+                    else {
+                        return "Please put a number between 1-100!"
+                    }
+                }
+            },
+        ])
+            .then((answer) => {
+                connection.query(
+                    'DELETE FROM employee WHERE ?',
+                    {
+                        // first_name: answer.first_name,
+                        // last_name: answer.last_name,
+                        id: answer.emp_id,
+                        // manager_id: answer.manager_id
+                    },
+                    (err) => {
+                        if (err) throw err;
+                        console.log("Employee has been REMOVED!"),
+                            runSearch()
+                    }
+                )
+            })
+    })
 
     // connection.query(
     //     'DELETE FROM employee WHERE first_name, last_name',
     // )
 }
 
-const updateRole = () =>{
-    // connection.query('select * from role',
-    inquirer.prompt ([
-        {
-            name: "updateID",
-            input:"input",
-            message: "What is the Employee ID you want to update?",
-
-        },
-        {
-            name: "newRole",
-            input: "input",
-            message : "What is the NEW role ID?"
-        },
-    ])
-    // )
-    .then((answer) => {
-        connection.query (
-            'UPDATE employee SET ? WHERE ?',
-           [
+const updateRole = () => {
+    connection.query('select id, first_name, last_name, role_id from employee', (err, res) => {
+        console.log(res)
+        if (err) throw err
+        inquirer.prompt([
             {
-                role_id: answer.newRole,
-            },
-            {
-                id: answer.updateID
-            },
-        ],
-            (err) => {
-                if (err) throw err;
-                console.log(`Your Role has been updated to ${answer.newRole}`)
-                runSearch()
-            }
-            )
+                name: "updateID",
+                input: "input",
+                message: "What is the Employee ID you want to update?",
 
+            },
+
+            {
+                name: "newRole",
+                input: "input",
+                message: "What is the NEW role ID?"
+            },
+        ])
+
+            .then((answer) => {
+                connection.query(
+                    'UPDATE employee SET ? WHERE ?',
+                    [
+                        {
+                            role_id: answer.newRole,
+                        },
+                        {
+                            id: answer.updateID
+                        },
+                    ],
+                    (err) => {
+                        if (err) throw err;
+                        console.log(`Your Role has been updated to ${answer.newRole}`)
+                        runSearch()
+                    }
+                )
+
+            })
     })
+}
 
+//Update each employee's managers... Some will say NULL bc they Don't have a manager..//
 
-    // const query = 'UPDATE employee SET ? WHERE ?',
+const updateManager = () => {
+    connection.query('select id, first_name, last_name, manager_id from employee', (err, res) => {
+        console.log(res)
+        if (err) throw err
+        inquirer.prompt([
+            {
+                name: "updateID",
+                input: "input",
+                message: "What is the Employee ID you want to update?",
 
+            },
+
+            {
+                name: "newManager",
+                input: "input",
+                message: "What is the NEW Manager ID?"
+            },
+        ])
+
+            .then((answer) => {
+                connection.query(
+                    'UPDATE employee SET ? WHERE ?',
+                    [
+                        {
+                            manager_id: answer.newManager,
+                        },
+                        {
+                            id: answer.updateID
+                        },
+                    ],
+                    (err) => {
+                        if (err) throw err;
+                        console.log(`Your Manager ID has been updated to ${answer.newManager}`)
+                        runSearch()
+                    }
+                )
+
+            })
+    })
 }
 
 
