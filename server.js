@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table')
 
-//CONSOLE LOG STYLING- 'JEEZ'YS EMPLOYEE TRACKER'
+//CONSOLE LOG STYLING- 'JEEZY'S EMPLOYEE TRACKER'
 const figlet = require ('figlet')
 // const boxen = require ('boxen')
 
