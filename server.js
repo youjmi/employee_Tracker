@@ -580,7 +580,7 @@ const updateManager = () => {
 
 // BONUS  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 const budgetDept = () => {
-    connection.query ("select department.id,department.name,sum(role.salary)from department inner join role on department.id=role.department_id group by department.id, department.name"
+    connection.query ("select department.id,department.name,sum(role.salary) as 'DEPARTMENT BUDGET' from department inner join role on department.id=role.department_id group by department.id, department.name"
     , (err,res)=> {
         console.log(res)
         if (err) throw err
