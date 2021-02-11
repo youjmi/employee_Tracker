@@ -1,10 +1,11 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table')
+// const boxen = require ('boxen')
 
 //CONSOLE LOG STYLING- 'JEEZY'S EMPLOYEE TRACKER'
 const figlet = require ('figlet')
-// const boxen = require ('boxen')
+
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -197,7 +198,7 @@ const addDept = () => {
                 },
                 (err) => {
                     if (err) throw err;
-                    console.log("New Department has been added!"),
+                    console.log(`New Department, ${answer.dept_name} has been added!`),
                         runSearch()
                 }
             )
@@ -240,13 +241,14 @@ const addRole = () => {
             name: "dept_id",
             input: "input",
             message: "Department ID:",
-            validate(entryInput) { //VALIDATION FUNCTION
-                if (/^([1-9])$/.test(entryInput)) {
-                    return true
-                }
-                else {
-                    return "PUT THE DEPARTMENT ID"
-                }
+            validate: (entryInput) => { //VALIDATION FUNCTION
+                if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                return true
+            }
+            else {
+                return "Please put a number between 1-100!"
+            }
+
             }
         },
     ])
@@ -338,7 +340,7 @@ const addEmployee = () => {
                 },
                 (err) => {
                     if (err) throw err;
-                    console.log("New Employee has been added!"),
+                    console.log(`New Employee,${answer.first_name} has been added!`),
                         runSearch()
                 }
             )
@@ -375,7 +377,7 @@ const removeRole = () => {
                     },
                     (err) => {
                         if (err) throw err;
-                        console.log("Role has been REMOVED!"),
+                        console.log(`Role : ${answer.role_id} has been REMOVED!`),
                             runSearch()
                     }
                 )
@@ -412,7 +414,7 @@ const removeDept = () => {
                     },
                     (err) => {
                         if (err) throw err;
-                        console.log("Department has been REMOVED!"),
+                        console.log(`Department ${answer.dept_id} has been REMOVED!`),
                             runSearch()
                     }
                 )
@@ -449,7 +451,7 @@ const removeEmployee = () => {
                     },
                     (err) => {
                         if (err) throw err;
-                        console.log("Employee has been REMOVED!"),
+                        console.log(`Employee ID ${answer.emp_id} has been REMOVED!`),
                             runSearch()
                     }
                 )

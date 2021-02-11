@@ -16,7 +16,7 @@
  Here is my link : https://github.com/youjmi/employee_Tracker
 
 
- Here is the link to my video tutorial: ---------------
+ Here is the link to my video tutorial: https://drive.google.com/file/d/1mlAl1Db10I4w3rwA4OJeufxc71HdvjHd/view
 
 
 In this homework assignment, I have created and built a solution for managing a company's employees using node, inquirer, and MySQL.
