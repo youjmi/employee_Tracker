@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table')
+const figlet = require ('figlet')
 // const boxen = require ('boxen')
 
 const connection = mysql.createConnection({
@@ -22,6 +23,32 @@ connection.connect((err) => {
     runSearch();
 });
 
+
+// console.log(`╔═════════════════════════════════════════════════════╗
+// ║                                                     ║
+// ║     _____                 _                         ║
+// ║    | ____|_ __ ___  _ __ | | ___  _   _  ___  ___   ║
+// ║    |  _| | '_ \` _ \\| '_ \\| |/ _ \\| | | |/ _ \\/ _ \\  ║
+// ║    | |___| | | | | | |_) | | (_) | |_| |  __/  __/  ║
+// ║    |_____|_| |_| |_| .__/|_|\\___/ \\__, |\\___|\\___|  ║
+// ║                    |_|            |___/             ║
+// ║                                                     ║
+// ║     __  __                                          ║
+// ║    |  \\/  | __ _ _ __   __ _  __ _  ___ _ __        ║
+// ║    | |\\/| |/ _\` | '_ \\ / _\` |/ _\` |\/ _ \\ '__|       ║
+// ║    | |  | | (_| | | | | (_| | (_| |  __/ |          ║
+// ║    |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|          ║
+// ║                              |___/                  ║
+// ║                                                     ║
+// \╚═════════════════════════════════════════════════════╝`)
+
+
+console.log(figlet.textSync("Jeezy"+"'"+'s'+'  '+'Employee Tracker!', {
+    font:'Standard',
+    horizontalLayout:'default',
+    verticalLayout:'default'
+}));
+
 const runSearch = () => {
     inquirer
         .prompt({
@@ -41,6 +68,7 @@ const runSearch = () => {
                 'Remove Employee',
                 'Update Employee Role',
                 'Update Employee Manager',
+                'View Budget per Department',
                 '-----Exit-----',
 
             ],
@@ -88,11 +116,15 @@ const runSearch = () => {
                     break;
 
                 case 'Update Employee Role':
-                    updateRole();
+                    updateRole(); //done
                     break;
 
                 case 'Update Employee Manager':
                     updateManager(); //done
+                    break;
+
+                case 'View Budget per Department':
+                    budgetDept(); //done
                     break;
 
                 case '-----Exit-----':
@@ -118,7 +150,6 @@ const viewAll = () => {
     runSearch();
 };
 
-///FIND WHAT ISSUE HERE IS. IT COMBINES SEPARATELY WITH ROLE AND DEPARTMENTS
 const viewRoles = () => {
     const query =
         'select title, salary, department_id from role'
@@ -143,8 +174,10 @@ const viewDepts = () => {
     runSearch();
 };
 
+//BONUS-   * View employees by manager
 const viewManager = () => {
-    const query = 'Select * from employee where manager_id'
+    const query = 
+    'Select * from employee where manager_id'
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.log("---------------------------------")
@@ -327,7 +360,6 @@ const addEmployee = () => {
 
 
 
-
 // * The command-line application should allow users to:
 
 //   * Update employee managers
@@ -339,12 +371,12 @@ const addEmployee = () => {
 //   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
 
-//REMOVE ROLE//
-const removeRole = () =>{
-    connection.query ('select * from role',(err,res)=> {
+//BONUS - *REMOVE ROLE//
+const removeRole = () => {
+    connection.query('select * from role', (err, res) => {
         console.log(res)
         if (err) throw err
-        inquirer.prompt ([
+        inquirer.prompt([
             {
                 name: "role_id",
                 input: "input",
@@ -360,31 +392,28 @@ const removeRole = () =>{
             },
 
         ])
-        .then((answer) => {
-            connection.query(
-                'DELETE FROM role WHERE ?',
-                {
-                    // first_name: answer.first_name,
-                    // last_name: answer.last_name,
-                    id: answer.role_id,
-                    // manager_id: answer.manager_id
-                },
-                (err) => {
-                    if (err) throw err;
-                    console.log("Role has been REMOVED!"),
-                        runSearch()
-                }
-            )
-        })
+            .then((answer) => {
+                connection.query(
+                    'DELETE FROM role WHERE ?',
+                    {
+                        id: answer.role_id,
+                    },
+                    (err) => {
+                        if (err) throw err;
+                        console.log("Role has been REMOVED!"),
+                            runSearch()
+                    }
+                )
+            })
     })
 }
 
-//REMOVE DEPARTMENT//
-const removeDept = () =>{
-    connection.query ('select * from department',(err,res)=> {
+//BONUS - REMOVE DEPARTMENT//
+const removeDept = () => {
+    connection.query('select * from department', (err, res) => {
         console.log(res)
         if (err) throw err
-        inquirer.prompt ([
+        inquirer.prompt([
             {
                 name: "dept_id",
                 input: "input",
@@ -400,27 +429,27 @@ const removeDept = () =>{
             },
 
         ])
-        .then((answer) => {
-            connection.query(
-                'DELETE FROM department WHERE ?',
-                {
-                    // first_name: answer.first_name,
-                    // last_name: answer.last_name,
-                    id: answer.dept_id,
-                    // manager_id: answer.manager_id
-                },
-                (err) => {
-                    if (err) throw err;
-                    console.log("Department has been REMOVED!"),
-                        runSearch()
-                }
-            )
-        })
+            .then((answer) => {
+                connection.query(
+                    'DELETE FROM department WHERE ?',
+                    {
+                        // first_name: answer.first_name,
+                        // last_name: answer.last_name,
+                        id: answer.dept_id,
+                        // manager_id: answer.manager_id
+                    },
+                    (err) => {
+                        if (err) throw err;
+                        console.log("Department has been REMOVED!"),
+                            runSearch()
+                    }
+                )
+            })
     })
 }
 
 
-//REMOVE EMPLOYEE
+//BONUS - REMOVE EMPLOYEE
 const removeEmployee = () => {
     connection.query('select * from employee', (err, res) => {
         console.log(res)
@@ -458,11 +487,9 @@ const removeEmployee = () => {
             })
     })
 
-    // connection.query(
-    //     'DELETE FROM employee WHERE first_name, last_name',
-    // )
 }
 
+//UPDATE ROLE FOR EMPLOYEE
 const updateRole = () => {
     connection.query('select id, first_name, last_name, role_id from employee', (err, res) => {
         console.log(res)
@@ -504,8 +531,7 @@ const updateRole = () => {
     })
 }
 
-//Update each employee's managers... Some will say NULL bc they Don't have a manager..//
-
+//BONUS - Update each employee's managers..Some employees have managers. Some would not.//
 const updateManager = () => {
     connection.query('select id, first_name, last_name, manager_id from employee', (err, res) => {
         console.log(res)
@@ -547,16 +573,15 @@ const updateManager = () => {
     })
 }
 
+// BONUS  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+const budgetDept = () => {
+    connection.query ("select department.id,department.name,sum(role.salary)from department inner join role on department.id=role.department_id group by department.id, department.name"
+    , (err,res)=> {
+        console.log(res)
+        if (err) throw err
+        console.log("--------------------------------------")
+        console.table(res)
+    })
+    runSearch()
+}
 
-
-
-
-// * The command-line application should allow users to:
-
-//   * Update employee managers
-
-//   * View employees by manager
-
-//   * Delete departments, roles, and employees
-
-//   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
