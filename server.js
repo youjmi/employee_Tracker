@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table')
+
+//CONSOLE LOG STYLING- 'JEEZ'YS EMPLOYEE TRACKER'
 const figlet = require ('figlet')
 // const boxen = require ('boxen')
 
@@ -18,37 +20,20 @@ const connection = mysql.createConnection({
     database: 'employee_trackerDB',
 });
 
+//CONNECTED
 connection.connect((err) => {
     if (err) throw err;
     runSearch();
 });
 
-
-// console.log(`╔═════════════════════════════════════════════════════╗
-// ║                                                     ║
-// ║     _____                 _                         ║
-// ║    | ____|_ __ ___  _ __ | | ___  _   _  ___  ___   ║
-// ║    |  _| | '_ \` _ \\| '_ \\| |/ _ \\| | | |/ _ \\/ _ \\  ║
-// ║    | |___| | | | | | |_) | | (_) | |_| |  __/  __/  ║
-// ║    |_____|_| |_| |_| .__/|_|\\___/ \\__, |\\___|\\___|  ║
-// ║                    |_|            |___/             ║
-// ║                                                     ║
-// ║     __  __                                          ║
-// ║    |  \\/  | __ _ _ __   __ _  __ _  ___ _ __        ║
-// ║    | |\\/| |/ _\` | '_ \\ / _\` |/ _\` |\/ _ \\ '__|       ║
-// ║    | |  | | (_| | | | | (_| | (_| |  __/ |          ║
-// ║    |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|          ║
-// ║                              |___/                  ║
-// ║                                                     ║
-// \╚═════════════════════════════════════════════════════╝`)
-
-
+//CONSOLE LOG STYLING WHEN APP IS ACTIVATED
 console.log(figlet.textSync("Jeezy"+"'"+'s'+'  '+'Employee Tracker!', {
     font:'Standard',
     horizontalLayout:'default',
     verticalLayout:'default'
 }));
 
+//MAIN MENU
 const runSearch = () => {
     inquirer
         .prompt({
@@ -138,7 +123,7 @@ const runSearch = () => {
         });
 };
 
-//List all Employees
+//LISTING ALL THE EMPLOYEES
 const viewAll = () => {
     const query =
         'select id, first_name, last_name from employee'
@@ -149,7 +134,7 @@ const viewAll = () => {
     });
     runSearch();
 };
-
+//LISTING ALL THE ROLES
 const viewRoles = () => {
     const query =
         'select title, salary, department_id from role'
@@ -162,7 +147,7 @@ const viewRoles = () => {
 };
 
 
-//Lists Employees per Department 
+//LISTING ALL DEPARTMENTS
 const viewDepts = () => {
     const query =
         'select name from department'
@@ -186,7 +171,7 @@ const viewManager = () => {
     runSearch();
 };
 
-//ADD DEPT
+//ADD YOUR DEPARTMENT
 const addDept = () => {
     inquirer.prompt([
 
@@ -194,7 +179,7 @@ const addDept = () => {
             name: "dept_name",
             input: "input",
             message: "Department Name:",
-            validate(entryInput) {
+            validate(entryInput) { //VALIDATION FUNCTION
                 if (entryInput) {
                     return true
                 }
@@ -219,6 +204,7 @@ const addDept = () => {
         })
 }
 
+//ADD YOUR ROLE
 const addRole = () => {
     inquirer.prompt([
 
@@ -226,7 +212,7 @@ const addRole = () => {
             name: "title",
             input: "input",
             message: "Role Title:",
-            validate(entryInput) {
+            validate(entryInput) { //VALIDATION FUNCTION
                 if (entryInput) {
                     return true
                 }
@@ -240,7 +226,7 @@ const addRole = () => {
             input: "input",
             message: "Role Salary:",
             validate(entryInput) {
-                if (!isNaN(entryInput)) {
+                if (!isNaN(entryInput)) { //VALIDATION FUNCTION
                     if (!(entryInput === "")) {
                         return true
                     }
@@ -254,7 +240,7 @@ const addRole = () => {
             name: "dept_id",
             input: "input",
             message: "Department ID:",
-            validate(entryInput) {
+            validate(entryInput) { //VALIDATION FUNCTION
                 if (/^([1-9])$/.test(entryInput)) {
                     return true
                 }
@@ -283,14 +269,14 @@ const addRole = () => {
 }
 
 
-//ADD EMPLOYEE
+//ADD YOUR EMPLOYEE
 const addEmployee = () => {
     inquirer.prompt([
         {
             name: "first_name",
             input: "input",
             message: "First Name:",
-            validate(entryInput) {
+            validate(entryInput) { //VALIDATION FUNCTION
                 if (entryInput) {
                     return true
                 }
@@ -303,7 +289,7 @@ const addEmployee = () => {
             name: "last_name",
             input: "input",
             message: "Last Name:",
-            validate(entryInput) {
+            validate(entryInput) { //VALIDATION FUNCTION
                 if (entryInput) {
                     return true
                 }
@@ -316,26 +302,28 @@ const addEmployee = () => {
             name: "role_id",
             input: "input",
             message: "Role ID:",
-            validate: (entryInput) => {
-                if (/^([1-9])$/.test(entryInput)) {
-                    return true
-                }
-                else {
-                    return "Please put a number between 1-9 only!"
-                }
+            validate: (entryInput) => { //VALIDATION FUNCTION
+                if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                return true
+            }
+            else {
+                return "Please put a number between 1-100!"
+            }
+
             }
         },
         {
             name: "manager_id",
             input: "input",
             message: "Manager ID:",
-            validate: (entryInput) => {
-                if (/^([1-9])$/.test(entryInput)) {
-                    return true
-                }
-                else {
-                    return "Please put a number between 1-9 only!"
-                }
+            validate: (entryInput) => { //VALIDATION FUNCTION
+                if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                return true
+            }
+            else {
+                return "Please put a number between 1-100!"
+            }
+
             }
         },
     ])
@@ -358,19 +346,6 @@ const addEmployee = () => {
 
 }
 
-
-
-// * The command-line application should allow users to:
-
-//   * Update employee managers
-
-//   * View employees by manager
-
-//   * Delete departments, roles, and employees
-
-//   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
-
-
 //BONUS - *REMOVE ROLE//
 const removeRole = () => {
     connection.query('select * from role', (err, res) => {
@@ -380,8 +355,8 @@ const removeRole = () => {
             {
                 name: "role_id",
                 input: "input",
-                message: "Role ID: ",
-                validate: (entryInput) => {
+                message: "Role ID you wish to REMOVE: ",
+                validate: (entryInput) => { //VALIDATION FUNCTION
                     if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
                         return true
                     }
@@ -417,8 +392,8 @@ const removeDept = () => {
             {
                 name: "dept_id",
                 input: "input",
-                message: "Department ID: ",
-                validate: (entryInput) => {
+                message: "Department ID you wish to REMOVE: ",
+                validate: (entryInput) => { //VALIDATION FUNCTION
                     if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
                         return true
                     }
@@ -433,10 +408,7 @@ const removeDept = () => {
                 connection.query(
                     'DELETE FROM department WHERE ?',
                     {
-                        // first_name: answer.first_name,
-                        // last_name: answer.last_name,
                         id: answer.dept_id,
-                        // manager_id: answer.manager_id
                     },
                     (err) => {
                         if (err) throw err;
@@ -458,8 +430,8 @@ const removeEmployee = () => {
             {
                 name: "emp_id",
                 input: "input",
-                message: "Employee ID: ",
-                validate: (entryInput) => {
+                message: "Employee ID you wish to REMOVE: ",
+                validate: (entryInput) => { //VALIDATION FUNCTION
                     if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
                         return true
                     }
@@ -473,10 +445,7 @@ const removeEmployee = () => {
                 connection.query(
                     'DELETE FROM employee WHERE ?',
                     {
-                        // first_name: answer.first_name,
-                        // last_name: answer.last_name,
                         id: answer.emp_id,
-                        // manager_id: answer.manager_id
                     },
                     (err) => {
                         if (err) throw err;
@@ -499,13 +468,31 @@ const updateRole = () => {
                 name: "updateID",
                 input: "input",
                 message: "What is the Employee ID you want to update?",
+                validate: (entryInput) => { //VALIDATION FUNCTION
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-100!"
+                }
+
+                }
 
             },
 
             {
                 name: "newRole",
                 input: "input",
-                message: "What is the NEW role ID?"
+                message: "What is the NEW role ID?",
+                validate: (entryInput) => { //VALIDATION FUNCTION
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-100!"
+                }
+
+                }
             },
         ])
 
@@ -531,7 +518,7 @@ const updateRole = () => {
     })
 }
 
-//BONUS - Update each employee's managers..Some employees have managers. Some would not.//
+//BONUS - Update each employee's managers.//
 const updateManager = () => {
     connection.query('select id, first_name, last_name, manager_id from employee', (err, res) => {
         console.log(res)
@@ -540,14 +527,32 @@ const updateManager = () => {
             {
                 name: "updateID",
                 input: "input",
-                message: "What is the Employee ID you want to update?",
+                message: "What is the Employee ID of the current Manager you wish to UPDATE?",
+                validate: (entryInput) => { //VALIDATION FUNCTION
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-100!"
+                }
+
+                }
 
             },
 
             {
                 name: "newManager",
                 input: "input",
-                message: "What is the NEW Manager ID?"
+                message: "What is the NEW Manager ID?",
+                validate: (entryInput) => { //VALIDATION FUNCTION
+                    if (/^[1-9]$|^[1-9][0-9]$|^(100)$/.test(entryInput)) {
+                    return true
+                }
+                else {
+                    return "Please put a number between 1-100!"
+                }
+
+                }
             },
         ])
 
