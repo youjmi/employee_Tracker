@@ -56,6 +56,17 @@ BUT ALSO :
 
   * Viewing the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
+
+When navigating through some of these menu options, there are some options where 'input messages' are sensitive to being either letter format or only by digits. 
+
+I have added a
+
+```
+validate: (function)
+```
+which will prevent any incorrect information added. 
+
+
 ![Screen Shot 2021-02-11 at 2 51 51 PM](https://user-images.githubusercontent.com/73494581/107691803-ebedb980-6c79-11eb-9c58-8700c029263e.png)
 
 ![Screen Shot 2021-02-11 at 3 06 23 PM](https://user-images.githubusercontent.com/73494581/107693525-42f48e00-6c7c-11eb-977c-979eb39f745b.png)
@@ -85,3 +96,15 @@ BUT ALSO :
 ![Screen Shot 2021-02-11 at 3 16 00 PM](https://user-images.githubusercontent.com/73494581/107693939-c31af380-6c7c-11eb-8d16-224d5c9feb13.png)
 
 ![Screen Shot 2021-02-11 at 3 16 25 PM](https://user-images.githubusercontent.com/73494581/107693953-c7471100-6c7c-11eb-8643-ac2c136cdbef.png)
+
+
+## Contribution
+
+Thank you for having the time to view my work.
+
+I would like to give special acknowledgement to my study group as well. We assist one another by providing Feedback, Brainstorming, and general support:
+
+Rachel Wanke - https://github.com/rwanke14
+Amir Ashtiany - https://github.com/Alexfit4
+Johnnie Simpson - https://github.com/balokdecoy
+Frankie Rosado - https://github.com/Franciscorosado09
