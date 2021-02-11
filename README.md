@@ -23,13 +23,20 @@ In this homework assignment, I have created and built a solution for managing a 
 
 ## Installation 
 
-Please install the following
+
+To begin, please install the following:
+
+MySQL NPM package to connect to your MySQL database and perform queries.
 
 ```
-npm i inquirer --save
+npm i
 ```
 
-The Inquirer will prompt inputs in your terminal.
+Use console.table to print MySQL rows to the console. There is a built-in version of console.table, but the NPM package formats the data a little better for our purposes.
+
+```
+npm i console.table --save
+```
 
 Then application will be invoked by using the following command:
 
